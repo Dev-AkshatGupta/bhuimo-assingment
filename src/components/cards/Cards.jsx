@@ -1,17 +1,18 @@
 import React, { useState } from "react";
 import { Card, Typography,Button,Stack } from "@mui/material";
 import {useDispatch} from "react-redux";
-import {deleteProject} from "./../../redux/reducers/projectsSlice";
+import {
+  deleteProject,
+  toEditProject,
+  editProjectModal,
+  copyProject,
+} from "./../../redux/reducers/projectsSlice";
 const Cards = ({project}) => {
-  const [value, setValue] = useState();
-  const handleChange = (newValue) => {
-    setValue(newValue);
-  }; 
   const dispatch=useDispatch();
   return (
-    <Card sx={{ minWidth: 275, maxWidth: 300, padding: "1rem" }}>
+    <Card sx={{ minWidth: 275, maxWidth: 300, padding: "1rem" }} key={project.id}>
       <Typography sx={{ fontSize: 16 }} color="text.secondary" gutterBottom>
-        Card Name: {project.id}
+        Card Name: Project {project.id}
       </Typography>
       <Typography variant="h5" component="div">
         Project Budget:{project.budget}
@@ -22,6 +23,8 @@ const Cards = ({project}) => {
           <Button
             onClick={(e) => {
               e.stopPropagation();
+              dispatch( toEditProject(project));
+              dispatch(editProjectModal());
             }}
           >
             Edit
@@ -31,7 +34,9 @@ const Cards = ({project}) => {
           >
             Delete
           </Button>
-          <Button>Copy </Button>
+          <Button onClick={()=>{
+            dispatch(copyProject(project));
+          }}>Copy </Button>
         </Stack>
       </Stack>
     </Card>

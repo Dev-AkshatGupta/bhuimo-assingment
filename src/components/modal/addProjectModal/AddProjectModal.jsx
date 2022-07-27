@@ -64,7 +64,7 @@ const AddProjectModal = () => {
             type="date"
             id="start"
             name="trip-start"
-            value={value}
+            value={value.endDate}
             min={date}
             onChange={(e) => {
               setValue((prev) => ({ ...prev, endDate: e.target.value }));

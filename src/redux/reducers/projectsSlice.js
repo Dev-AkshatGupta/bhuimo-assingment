@@ -3,6 +3,7 @@ const initialState = {
   projects: [],
   isAddProjectModalOpen: false,
   isEditProjectModalOpen: false,
+  projectToBeEdited: {},
 };
 
 const projectsSlice = createSlice({
@@ -16,7 +17,7 @@ const projectsSlice = createSlice({
       state.isEditProjectModalOpen = !state.isEditProjectModalOpen;
     },
     deleteProject(state, action) {
-      console.log(action.payload);
+
       state.projects = state.projects.filter(
         (project) => project.id !== action.payload.id
       );
@@ -25,10 +26,32 @@ const projectsSlice = createSlice({
       action.payload = { ...action.payload, id: state.projects.length + 1 };
       state.projects = [...state.projects, action.payload];
     },
+    copyProject(state, action) {
+      action.payload = {
+        ...action.payload,
+        id: state.projects.length + 1,
+      };
+      state.projects = [...state.projects, action.payload];
+    },
+    toEditProject(state, action) {
+      state.projectToBeEdited = action.payload;
+    },
+    editProject(state, action) {
+      const projectIndex = state.projects.findIndex(
+        (project) => project.id === action.payload.id
+      );
+      state.projects[projectIndex]=action.payload;
+    
+    },
   },
-
-  extraReducers: {},
 });
-export const { deleteProject, addProject, addProjectModal, editProjectModal } =
-  projectsSlice.actions;
+export const {
+  deleteProject,
+  addProject,
+  addProjectModal,
+  editProjectModal,
+  copyProject,
+  editProject,
+  toEditProject,
+} = projectsSlice.actions;
 export default projectsSlice.reducer;

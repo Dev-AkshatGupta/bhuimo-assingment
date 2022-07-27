@@ -3,11 +3,18 @@ import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { TextField, Button, Stack } from "@mui/material";
+import {
+  editProject,
+  editProjectModal,
+} from "./../../../redux/reducers/projectsSlice";
+import { useSelector, useDispatch } from "react-redux";
 const EditProjectModal = () => {
   let today = new Date();
   let date =
     today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
-  const [value, setValue] = useState();
+  const { projectToBeEdited } = useSelector((state) => state.projects);
+  const [value, setValue] = useState(projectToBeEdited);
+  const dispatch = useDispatch();
   return (
     <Modal
       disablePortal
@@ -22,7 +29,10 @@ const EditProjectModal = () => {
         alignItems: "center",
         justifyContent: "center",
       }}
-      //   container={() => rootRef.current}
+      onClick={() => {
+        dispatch(EditProjectModal());
+      }}
+ 
     >
       <Box
         sx={{
@@ -33,8 +43,11 @@ const EditProjectModal = () => {
           boxShadow: (theme) => theme.shadows[5],
           p: 4,
         }}
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
       >
-        <Typography  variant="h6" component="h2">
+        <Typography variant="h6" component="h2">
           Edit Project
         </Typography>
         <Typography sx={{ pt: 2 }}>
@@ -45,22 +58,42 @@ const EditProjectModal = () => {
             id="standard-basic"
             label="Project Budget"
             variant="standard"
+            value={value.budget}
+            onChange={(e) => {
+              setValue((prev) => ({ ...prev, budget: e.target.value }));
+            }}
           />
 
-          {console.log(date)}
+       
           <input
             type="date"
             id="start"
             name="trip-start"
-            value={value}
+            value={value.endDate}
             min={date}
             onChange={(e) => {
-              setValue(e.target.value);
-              console.log(e.target.value);
+              setValue((prev) => ({ ...prev, endDate: e.target.value }));
             }}
           ></input>
 
-          <Button variant="outlined">Outlined</Button>
+          <Button
+            variant="outlined"
+            onClick={() => {
+              dispatch(editProject(value));
+               dispatch(editProjectModal());
+            }}
+          >
+            Edit
+          </Button>
+          <Button
+            color="error"
+            variant="outlined"
+            onClick={() => {
+              dispatch(editProjectModal());
+            }}
+          >
+            Cancel
+          </Button>
         </Stack>
       </Box>
     </Modal>
