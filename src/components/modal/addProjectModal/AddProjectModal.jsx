@@ -1,13 +1,19 @@
-import React,{useState} from 'react'
+import React, { useState } from "react";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { TextField,Button,Stack } from "@mui/material";
+import { TextField, Button, Stack } from "@mui/material";
+import { useDispatch } from "react-redux";
+import {
+  addProjectModal,
+  addProject,
+} from "./../../../redux/reducers/projectsSlice";
 const AddProjectModal = () => {
   let today = new Date();
   let date =
     today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
-  const [value, setValue] = useState();
+  const [value, setValue] = useState({ budget: 0, endDate: "" });
+  const dispatch = useDispatch();
   return (
     <Modal
       disablePortal
@@ -22,8 +28,8 @@ const AddProjectModal = () => {
         alignItems: "center",
         justifyContent: "center",
       }}
-      onClick={()=>{
-        
+      onClick={() => {
+        dispatch(addProjectModal());
       }}
     >
       <Box
@@ -35,7 +41,9 @@ const AddProjectModal = () => {
           boxShadow: (theme) => theme.shadows[5],
           p: 4,
         }}
-        onClick={(e)=>e.stopPropogation()}
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
       >
         <Typography id="server-modal-title" variant="h6" component="h2">
           Add Project
@@ -48,6 +56,9 @@ const AddProjectModal = () => {
             id="standard-basic"
             label="Project Budget"
             variant="standard"
+            onChange={(e) => {
+              setValue((prev) => ({ ...prev, budget: Number(e.target.value) }));
+            }}
           />
           <input
             type="date"
@@ -56,11 +67,25 @@ const AddProjectModal = () => {
             value={value}
             min={date}
             onChange={(e) => {
-              setValue(e.target.value);
+              setValue((prev) => ({ ...prev, endDate: e.target.value }));
             }}
           ></input>
-          <Button variant="outlined">Outlined</Button>
-          <Button variant="outlined" color="error">
+          <Button
+            variant="outlined"
+            onClick={() => {
+              dispatch(addProject(value));
+                dispatch(addProjectModal());
+            }}
+          >
+            Create the Project
+          </Button>
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={() => {
+              dispatch(addProjectModal());
+            }}
+          >
             Close
           </Button>
         </Stack>
@@ -69,4 +94,4 @@ const AddProjectModal = () => {
   );
 };
 
-export {AddProjectModal}
+export { AddProjectModal };
