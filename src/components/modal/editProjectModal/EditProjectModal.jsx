@@ -30,9 +30,8 @@ const EditProjectModal = () => {
         justifyContent: "center",
       }}
       onClick={() => {
-        dispatch(EditProjectModal());
+        dispatch(editProjectModal());
       }}
- 
     >
       <Box
         sx={{
@@ -64,7 +63,6 @@ const EditProjectModal = () => {
             }}
           />
 
-       
           <input
             type="date"
             id="start"
@@ -80,7 +78,7 @@ const EditProjectModal = () => {
             variant="outlined"
             onClick={() => {
               dispatch(editProject(value));
-               dispatch(editProjectModal());
+              dispatch(editProjectModal());
             }}
           >
             Edit
